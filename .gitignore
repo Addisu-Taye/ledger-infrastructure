@@ -1,10 +1,178 @@
-# Python-generated files
+# =============================================================================
+# Python
+# =============================================================================
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+*.py[cod]
+*$py.class
+*.so
 
-# Virtual environments
-.venv
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# =============================================================================
+# Virtual Environments (uv / venv / conda)
+# =============================================================================
+.venv/
+venv/
+ENV/
+env/
+.env/
+.venv/bin/
+.venv/Scripts/
+.venv/Lib/
+.venv/include/
+uv.lock
+
+# =============================================================================
+# Environment Variables & Secrets
+# =============================================================================
+.env
+.env.local
+.env.*.local
+*.env
+secrets.json
+credentials.json
+db_password.txt
+.postgres_password
+
+# =============================================================================
+# IDE & Editor
+# =============================================================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+
+# =============================================================================
+# Testing & Coverage
+# =============================================================================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.mypy_cache/
+
+# =============================================================================
+# Database & Data
+# =============================================================================
+# Local SQLite files (if used for testing)
+*.db
+*.sqlite
+*.sqlite3
+
+# Database dumps (should never be committed)
+*.sql.dump
+*.pgdump
+data/
+dump/
+
+# =============================================================================
+# Logs & Runtime
+# =============================================================================
+logs/
+*.log
+log/
+tmp/
+temp/
+*.pid
+*.seed
+*.pid.lock
+
+# =============================================================================
+# Operating System
+# =============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.Trash-*
+.nfs*
+
+# =============================================================================
+# Jupyter Notebooks (if used for exploration)
+# =============================================================================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# =============================================================================
+# MCP Server Runtime
+# =============================================================================
+mcp_runtime/
+sessions/
+agent_state/
+context_cache/
+
+# =============================================================================
+# Build & CI/CD
+# =============================================================================
+.manifest
+*.bak
+*.backup
+.cache/
+.parcel-cache/
+
+# =============================================================================
+# Documentation Build
+# =============================================================================
+docs/_build/
+site/
+
+# =============================================================================
+# Sensitive Audit Data (NEVER commit production audit trails)
+# =============================================================================
+audit_exports/
+regulatory_packages/
+examination_data/
+*.audit.json

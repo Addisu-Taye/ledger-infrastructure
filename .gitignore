@@ -176,3 +176,16 @@ audit_exports/
 regulatory_packages/
 examination_data/
 *.audit.json
+# =============================================================================
+# Environment & Secrets - NEVER COMMIT
+# =============================================================================
+.env
+.env.local
+.env.*.local
+*.env
+secrets.json
+credentials.json
+*.pem
+*.key
+*.crt
+*.p12

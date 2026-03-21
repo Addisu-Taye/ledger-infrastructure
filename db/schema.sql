@@ -1,3 +1,7 @@
+-- db/schema.sql
+-- Event Store Core Schema for The Ledger
+
+-- Main events table (append-only)
 CREATE TABLE IF NOT EXISTS events (
   event_id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   stream_id        TEXT NOT NULL,
@@ -11,10 +15,13 @@ CREATE TABLE IF NOT EXISTS events (
   CONSTRAINT uq_stream_position UNIQUE (stream_id, stream_position)
 );
 
+-- Indexes for query performance
 CREATE INDEX IF NOT EXISTS idx_events_stream_id ON events (stream_id, stream_position);
 CREATE INDEX IF NOT EXISTS idx_events_global_pos ON events (global_position);
 CREATE INDEX IF NOT EXISTS idx_events_type ON events (event_type);
+CREATE INDEX IF NOT EXISTS idx_events_recorded ON events (recorded_at);
 
+-- Stream metadata table
 CREATE TABLE IF NOT EXISTS event_streams (
   stream_id        TEXT PRIMARY KEY,
   aggregate_type   TEXT NOT NULL,
@@ -24,12 +31,14 @@ CREATE TABLE IF NOT EXISTS event_streams (
   metadata         JSONB NOT NULL DEFAULT '{}'::jsonb
 );
 
+-- Projection checkpoint tracking
 CREATE TABLE IF NOT EXISTS projection_checkpoints (
   projection_name  TEXT PRIMARY KEY,
   last_position    BIGINT NOT NULL DEFAULT 0,
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Outbox pattern for guaranteed event delivery
 CREATE TABLE IF NOT EXISTS outbox (
   id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   event_id         UUID NOT NULL REFERENCES events(event_id),

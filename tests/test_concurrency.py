@@ -141,6 +141,13 @@ async def test_double_decision_concurrency(event_store):
 
 @pytest.mark.asyncio
 async def test_concurrent_load_and_append(event_store):
+    stream_id = "loan-test-002"
+    # Clean stream first (handle FK dependencies)
+    async with event_store._pool.acquire() as conn:
+        await conn.execute("DELETE FROM outbox WHERE event_id IN (SELECT event_id FROM events WHERE stream_id = $1)", stream_id)
+        await conn.execute("DELETE FROM events WHERE stream_id = $1", stream_id)
+        await conn.execute("DELETE FROM event_streams WHERE stream_id = $1", stream_id)
+    # Create initial stream
     """
     Additional test: Verify stream_version() is accurate under concurrent load.
     """
@@ -162,12 +169,12 @@ async def test_concurrent_load_and_append(event_store):
             versions.append(new_version)
             return new_version
         except OptimisticConcurrencyError:
-            return None
+            return await append_with_retry(stream_id, expected_version + 1, event_data)
     
     # Sequential appends (should all succeed)
     v1 = await append_with_retry(stream_id, 1, {"agent": "1"})
-    v2 = await append_with_retry(stream_id, 2, {"agent": "2"})
-    v3 = await append_with_retry(stream_id, 3, {"agent": "3"})
+    v2 = await append_with_retry(stream_id, v1, {"agent": "2"})
+    v3 = await append_with_retry(stream_id, v2, {"agent": "3"})
     
     assert v1 == 2, f"Expected version 2, got {v1}"
     assert v2 == 3, f"Expected version 3, got {v2}"

@@ -34,13 +34,25 @@ class CreditAnalysisCompleted(BaseEvent):
 @pytest.fixture
 async def event_store():
     """Create fresh event store for each test."""
-    dsn = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/ledger_test")
+    dsn = os.getenv("DATABASE_URL", "postgresql://postgres:Pass%4012345@localhost:5433/ledger_infrastructure")
     store = EventStore(dsn, UpcasterRegistry())
     await store.connect()
     
-    # Clean up test stream before test
+    # Clean up test data - handle foreign key: outbox → events
     async with store._pool.acquire() as conn:
+        # 1. Delete outbox entries first (FK dependency)
+        await conn.execute(
+            """
+            DELETE FROM outbox 
+            WHERE event_id IN (
+                SELECT event_id FROM events WHERE stream_id = $1
+            )
+            """,
+            "loan-test-001"
+        )
+        # 2. Then delete events
         await conn.execute("DELETE FROM events WHERE stream_id = $1", "loan-test-001")
+        # 3. Then delete stream metadata
         await conn.execute("DELETE FROM event_streams WHERE stream_id = $1", "loan-test-001")
     
     yield store
